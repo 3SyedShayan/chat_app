@@ -1,5 +1,7 @@
 import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
+import 'package:chat_app/pages/auth/profile.dart';
+import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  String get userName => "User Name";
+  String get email => "email@example.com";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
