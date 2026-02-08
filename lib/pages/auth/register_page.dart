@@ -1,4 +1,6 @@
+import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
+import 'package:chat_app/pages/home_page.dart';
 import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
@@ -183,7 +185,19 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _isLoading = true;
       });
-      await authService.createUser(fullName, email, password);
+      try {
+        await authService.createUser(fullName, email, password);
+        await HelperFunction.setUserLoggedInStatus(true);
+        await HelperFunction.setUserName(fullName);
+        await HelperFunction.setUserEmail(email);
+        if (mounted) {
+          nextScreenReplace(context, const HomePage());
+        }
+      } catch (e) {
+        if (mounted) {
+          showSnackbar(context, Colors.red, e.toString());
+        }
+      }
       setState(() {
         _isLoading = false;
       });
