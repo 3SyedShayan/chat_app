@@ -1,9 +1,12 @@
 import 'package:chat_app/helper/helper_function.dart';
+import 'package:chat_app/pages/auth/login_page.dart';
+import 'package:chat_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '/shared/constants.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
@@ -23,11 +26,11 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  runApp( MainApp());
+  runApp(MainApp());
 }
 
 class MainApp extends StatefulWidget {
-  bool _isSignedIn = false; 
+  bool _isSignedIn = false;
   MainApp({super.key});
 
   @override
@@ -38,9 +41,8 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
-  getUserLoggedInStatus();
+    getUserLoggedInStatus();
   }
-
 
   getUserLoggedInStatus() async {
     await HelperFunction.getUserLoggedInStatus().then((value) {
@@ -54,8 +56,14 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Constants().primaryColor,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      debugShowCheckedModeBanner: false,
+      title: "Groupie",
+      home: widget._isSignedIn ? HomePage() : LoginPage(),
     );
   }
 }
