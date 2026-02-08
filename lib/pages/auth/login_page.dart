@@ -1,4 +1,7 @@
+import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/register_page.dart';
+import 'package:chat_app/pages/home_page.dart';
+import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -136,9 +139,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  login() {
+  void login() async {
     if (formKey.currentState!.validate()) {
-      // login to firebase
+      await FirebaseAuthService().loginUser(email, password).then((val) {
+        if (val != null) {
+          HelperFunction.setUserLoggedInStatus(true);
+          HelperFunction.setUserEmail(email);
+          if (mounted) {
+            nextScreenReplace(context, const HomePage());
+            showSnackbar(context, Colors.green, "Login successful");
+          }
+        } else {
+          if (mounted) {
+            showSnackbar(context, Colors.red, "Login failed");
+          }
+        }
+      });
     }
   }
 }
