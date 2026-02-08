@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  bool _isLoading = false;
   String email = "";
   String password = "";
 
@@ -141,10 +141,17 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() async {
     if (formKey.currentState!.validate()) {
-      await FirebaseAuthService().loginUser(email, password).then((val) {
-        if (val != null) {
-          HelperFunction.setUserLoggedInStatus(true);
-          HelperFunction.setUserEmail(email);
+      setState(() {
+        _isLoading = true;
+      });
+      await FirebaseAuthService().loginUser(email, password).then((val) async {
+        if (val == true) {
+          var snapshot = await FirebaseAuthService().gettingUserData(email);
+          debugPrint("Snapshot show ${snapshot.toString()}");
+          await HelperFunction.setUserLoggedInStatus(true);
+          await HelperFunction.setUserEmail(email);
+          await HelperFunction.setUserName(snapshot.docs[0]['fullname']);
+
           if (mounted) {
             nextScreenReplace(context, const HomePage());
             showSnackbar(context, Colors.green, "Login successful");
