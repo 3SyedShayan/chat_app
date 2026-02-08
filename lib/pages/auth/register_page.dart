@@ -178,13 +178,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void register(String fullName, email, password) {
+  void register(String fullName, email, password) async {
     if (formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      authService.createUser(fullName, email, password);
-      _isLoading = false;
+      await authService.createUser(fullName, email, password);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 }
