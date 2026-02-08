@@ -30,25 +30,25 @@ void main() async {
 }
 
 class MainApp extends StatefulWidget {
-  bool _isSignedIn = false;
-  MainApp({super.key});
+  const   MainApp({super.key});
 
   @override
   State<MainApp> createState() => _MainAppState();
 }
 
 class _MainAppState extends State<MainApp> {
+  bool _isSignedIn = false;
   @override
   void initState() {
     super.initState();
     getUserLoggedInStatus();
   }
 
-  getUserLoggedInStatus() async {
+  void getUserLoggedInStatus() async {
     await HelperFunction.getUserLoggedInStatus().then((value) {
       if (value != null) {
         setState(() {
-          widget._isSignedIn = value;
+          _isSignedIn = value;
         });
       }
     });
@@ -63,7 +63,7 @@ class _MainAppState extends State<MainApp> {
       ),
       debugShowCheckedModeBanner: false,
       title: "Groupie",
-      home: widget._isSignedIn ? HomePage() : LoginPage(),
+      home: _isSignedIn ? HomePage() : LoginPage(),
     );
   }
 }
