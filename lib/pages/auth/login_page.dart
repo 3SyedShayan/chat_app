@@ -1,3 +1,4 @@
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/register_page.dart';
 import 'package:chat_app/pages/home_page.dart';
@@ -5,6 +6,8 @@ import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/instance_manager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+  AuthController authController = Get.put(AuthController());
   String email = "";
   String password = "";
 
@@ -141,16 +144,15 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() async {
     if (formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      authController.isLoading.value = true;
+
       await FirebaseAuthService().loginUser(email, password).then((val) async {
         if (val == true) {
           var snapshot = await FirebaseAuthService().gettingUserData(email);
           debugPrint("Snapshot show ${snapshot.toString()}");
-          await HelperFunction.setUserLoggedInStatus(true);
-          await HelperFunction.setUserEmail(email);
-          await HelperFunction.setUserName(snapshot.docs[0]['fullname']);
+          await AuthController.setUserLoggedInStatus(true);
+          await AuthController.setUserEmail(email);
+          await AuthController.setUserName(snapshot.docs[0]['fullname']);
 
           if (mounted) {
             nextScreenReplace(context, const HomePage());

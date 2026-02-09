@@ -1,3 +1,4 @@
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
 import 'package:chat_app/pages/home_page.dart';
@@ -30,7 +31,7 @@ void main() async {
 }
 
 class MainApp extends StatefulWidget {
-  const   MainApp({super.key});
+  const MainApp({super.key});
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -45,7 +46,7 @@ class _MainAppState extends State<MainApp> {
   }
 
   void getUserLoggedInStatus() async {
-    await HelperFunction.getUserLoggedInStatus().then((value) {
+    await AuthController.getUserLoggedInStatus().then((value) {
       if (value != null) {
         setState(() {
           _isSignedIn = value;

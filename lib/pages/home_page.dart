@@ -1,4 +1,4 @@
-import 'package:chat_app/helper/helper_function.dart';
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
 import 'package:chat_app/pages/auth/profile.dart';
 import 'package:chat_app/pages/search_page.dart';
@@ -130,7 +130,7 @@ class HomePage extends StatelessWidget {
   }
 
   void getData() async {
-    String email = await HelperFunction.getUserEmailFromSF() ?? "";
+    String email = await AuthController.getUserEmailFromSF() ?? "";
     debugPrint("User Email: $email");
     debugPrint("Current user: ${FirebaseAuthService().currentUser}");
     FirebaseAuthService().gettingUserData(email);
@@ -139,9 +139,9 @@ class HomePage extends StatelessWidget {
   void signOut(BuildContext context) async {
     try {
       await FirebaseAuthService().logOut();
-      await HelperFunction.setUserEmail("");
-      await HelperFunction.setUserName("");
-      await HelperFunction.setUserLoggedInStatus(false);
+      await AuthController.setUserEmail("");
+      await AuthController.setUserName("");
+      await AuthController.setUserLoggedInStatus(false);
       nextScreenReplace(context, const LoginPage());
     } catch (e) {
       showSnackbar(context, Colors.red, e.toString());

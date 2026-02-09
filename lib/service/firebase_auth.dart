@@ -1,4 +1,4 @@
-import 'package:chat_app/helper/helper_function.dart';
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/service/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,9 +39,9 @@ class FirebaseAuthService {
 
   Future logOut() async {
     try {
-      await HelperFunction.setUserLoggedInStatus(false);
-      await HelperFunction.setUserEmail("");
-      await HelperFunction.setUserName("");
+      await AuthController.setUserLoggedInStatus(false);
+      await AuthController.setUserEmail("");
+      await AuthController.setUserName("");
       await _firebaseAuth.signOut();
     } catch (e) {
       return null;
