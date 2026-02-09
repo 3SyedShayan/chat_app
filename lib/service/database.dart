@@ -23,4 +23,34 @@ class DatabaseService {
       debugPrint("Error: ${e.toString()}");
     }
   }
+
+  Future getUserGroups() async {
+    try {
+      return userCollection.doc(uid).snapshots();
+    } catch (e) {
+      debugPrint("Error: ${e.toString()}");
+    }
+  }
+
+  Future createGroup(String groupName, String id, String userName) async {
+    DocumentReference groupReference = await groupCollection.add({
+      "groupName": groupName,
+      "groupIcon": "",
+      "groupId": "",
+      "admin": "${id}_$userName",
+      "members": [],
+      "recentMessage": "",
+      "recentMessageSender": "",
+      "totalMembers": 0,
+    });
+    await groupReference.update({
+      "members": FieldValue.arrayUnion(["${uid}_$userName"]),
+      "groupId": groupReference.id,
+      "totalMembers": FieldValue.increment(1),
+    });
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    await userDocumentReference.update({
+      "groups": FieldValue.arrayUnion(["${groupReference.id}_$groupName"]),
+    });
+  }
 }
