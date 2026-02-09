@@ -197,7 +197,7 @@ class _RegisterPageState extends State<RegisterPage> {
         await AuthController.setUserName(fullName);
         await AuthController.setUserEmail(email);
         if (mounted) {
-          nextScreenReplace(context, const HomePage());
+          nextScreenReplace(context, HomePage());
         }
       } catch (e) {
         if (mounted) {

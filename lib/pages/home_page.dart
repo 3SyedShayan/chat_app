@@ -5,12 +5,13 @@ import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
-  String get userName => "User Name";
-  String get email => "email@example.com";
+  AuthController authController = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,10 +42,12 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Icon(Icons.account_circle, size: 150, color: Colors.grey[700]),
             const SizedBox(height: 15),
-            Text(
-              userName,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Obx(
+              () => Text(
+                authController.userName.value,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 30),
             const Divider(height: 2),
@@ -66,7 +69,10 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 nextScreenReplace(
                   context,
-                  ProfilePage(userName: userName, email: email),
+                  ProfilePage(
+                    userName: authController.userName.value,
+                    email: authController.userEmail.value,
+                  ),
                 );
               },
               contentPadding: const EdgeInsets.symmetric(

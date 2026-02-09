@@ -7,6 +7,20 @@ class AuthController extends GetxController {
   static RxString userNameKey = "USERNAMEKEY".obs;
   static RxString userEmailKey = "USEREMAILKEY".obs;
 
+  RxString userName = "".obs;
+  RxString userEmail = "".obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    userName.value = await getUserNameFromSF() ?? "";
+    userEmail.value = await getUserEmailFromSF() ?? "";
+  }
+
   static Future<bool?> setUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setBool(userLoggedInKey.value, isUserLoggedIn);
