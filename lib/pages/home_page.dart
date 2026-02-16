@@ -4,26 +4,48 @@ import 'package:chat_app/pages/auth/profile.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/database.dart';
 import 'package:chat_app/service/firebase_auth.dart';
+import 'package:chat_app/widgets/group_tile.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final AuthController authController = Get.put(AuthController());
   Stream? userGroupsStream;
+  String groupName = "";
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
+  }
+
   Future<void> gettingUserData() async {
     await DatabaseService(
       uid: FirebaseAuthService().currentUser?.uid,
     ).getUserGroups().then((value) {
       debugPrint("User Groups: ${value.toString()}");
-      userGroupsStream = value;
+      setState(() {
+        userGroupsStream = value;
+      });
     });
   }
-
-  String groupName = "";
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -186,12 +208,13 @@ class HomePage extends StatelessWidget {
                 itemCount: snapshot.data['groups'].length,
                 itemBuilder: (context, index) {
                   int reverseIndex = snapshot.data['groups'].length - index - 1;
-                  return null;
-                  // return GroupTile(
-                  //   groupId: getId(snapshot.data['groups'][reverseIndex]),
-                  //   groupName: getName(snapshot.data['groups'][reverseIndex]),
-                  //   userName: snapshot.data['fullName'],
-                  // );
+                  // return null;
+                  // return Text(snapshot.data['groups'][reverseIndex]);
+                  return GroupTile(
+                    groupId: getId(snapshot.data['groups'][reverseIndex]),
+                    groupName: getName(snapshot.data['groups'][reverseIndex]),
+                    userName: snapshot.data['fullname'],
+                  );
                 },
               );
             } else {
