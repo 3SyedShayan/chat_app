@@ -198,6 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
         await AuthController.setUserEmail(email);
         if (mounted) {
           nextScreenReplace(context, HomePage());
+          print("User Registered Successfully");
         }
       } catch (e) {
         if (mounted) {
