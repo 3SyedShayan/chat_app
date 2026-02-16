@@ -15,6 +15,7 @@ class FirebaseAuthService {
         email: email,
         password: password,
       )).user!;
+      await user.updateDisplayName(name);
       await DatabaseService(uid: user.uid).savingUserData(name, email);
       debugPrint("User Created: ${user.toString()}");
       return true;

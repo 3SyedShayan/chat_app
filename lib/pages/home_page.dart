@@ -144,6 +144,13 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          popUpDialog(context);
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       body: groupList(),
     );
   }
@@ -266,6 +273,13 @@ class HomePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     if (groupName != "") {
+                      print("Creating group: $groupName");
+                      print(
+                        "Current user: ${FirebaseAuthService().currentUser}",
+                      );
+                      print(
+                        "Current user uid: ${FirebaseAuthService().currentUser?.uid}",
+                      );
                       setState(() {
                         _isLoading = true;
                       });
@@ -273,7 +287,8 @@ class HomePage extends StatelessWidget {
                             uid: FirebaseAuthService().currentUser!.uid,
                           )
                           .createGroup(
-                            FirebaseAuthService().currentUser!.displayName!,
+                            FirebaseAuthService().currentUser!.displayName ??
+                                "",
                             FirebaseAuthService().currentUser!.uid,
                             groupName,
                           )

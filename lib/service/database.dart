@@ -12,7 +12,7 @@ class DatabaseService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Future savingUserData(String fullname, String email) async {
     try {
-      await userCollection.add({
+      await userCollection.doc(uid).set({
         "fullname": fullname,
         "email": email,
         "groups": [],
