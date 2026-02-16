@@ -9,7 +9,7 @@ class FirebaseAuthService {
 
   User? get currentUser => _firebaseAuth.currentUser;
 
-  Future createUser(String name, String email, String password) async {
+  Future<bool> createUser(String name, String email, String password) async {
     try {
       User user = (await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -20,11 +20,11 @@ class FirebaseAuthService {
       return true;
     } on FirebaseAuthException catch (e) {
       debugPrint("Error: ${e.toString()}");
-      return e.message;
+      throw e.message ?? "Registration failed";
     }
   }
 
-  Future loginUser(String email, String password) async {
+  Future<bool> loginUser(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -33,7 +33,7 @@ class FirebaseAuthService {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      throw e.message ?? "Login failed";
     }
   }
 

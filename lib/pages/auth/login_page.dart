@@ -5,7 +5,7 @@ import 'package:chat_app/service/firebase_auth.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,8 +22,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return authController.isLoading.value
-        ? const Center(child: CircularProgressIndicator(color: Colors.green))
+    return Obx(
+      () => authController.isLoading.value
+        ? const Scaffold(body: Center(child: CircularProgressIndicator(color: Colors.green)))
         : Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).primaryColor,
@@ -148,31 +149,32 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-          );
+          ),
+    );
   }
 
   void login() async {
     if (formKey.currentState!.validate()) {
       authController.isLoading.value = true;
+      try {
+        await FirebaseAuthService().loginUser(email, password);
+        var snapshot = await FirebaseAuthService().gettingUserData(email);
+        debugPrint("Snapshot show ${snapshot.toString()}");
+        await AuthController.setUserLoggedInStatus(true);
+        await AuthController.setUserEmail(email);
+        await AuthController.setUserName(snapshot.docs[0]['fullname']);
 
-      await FirebaseAuthService().loginUser(email, password).then((val) async {
-        if (val == true) {
-          var snapshot = await FirebaseAuthService().gettingUserData(email);
-          debugPrint("Snapshot show ${snapshot.toString()}");
-          await AuthController.setUserLoggedInStatus(true);
-          await AuthController.setUserEmail(email);
-          await AuthController.setUserName(snapshot.docs[0]['fullname']);
-
-          if (mounted) {
-            nextScreenReplace(context, HomePage());
-            showSnackbar(context, Colors.green, "Login successful");
-          }
-        } else {
-          if (mounted) {
-            showSnackbar(context, Colors.red, "Login failed");
-          }
+        if (mounted) {
+          nextScreenReplace(context, HomePage());
+          showSnackbar(context, Colors.green, "Login successful");
         }
-      });
+      } catch (e) {
+        if (mounted) {
+          showSnackbar(context, Colors.red, e.toString());
+        }
+      } finally {
+        authController.isLoading.value = false;
+      }
     }
   }
 }

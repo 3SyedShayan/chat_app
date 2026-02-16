@@ -204,8 +204,9 @@ class _RegisterPageState extends State<RegisterPage> {
         if (mounted) {
           showSnackbar(context, Colors.red, e.toString());
         }
+      } finally {
+        authController.isLoading.value = false;
       }
-      authController.isLoading.value = false;
     }
   }
 }

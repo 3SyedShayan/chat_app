@@ -194,11 +194,12 @@ class HomePage extends StatelessWidget {
             return noGroupWidget();
           }
         } else {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ),
-          );
+          return const Center(child: Text("No Data Found..."));
+          // Center(
+          //   child: CircularProgressIndicator(
+          //     color: Theme.of(context).primaryColor,
+          //   ),
+          // );
         }
       },
     );
