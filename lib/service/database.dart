@@ -75,4 +75,12 @@ class DatabaseService {
       debugPrint("Error: ${e.toString()}");
     }
   }
+
+  getMembers(String groupId) async {
+    try {
+      return groupCollection.doc(groupId).snapshots();
+    } catch (e) {
+      debugPrint("Error: ${e.toString()}");
+    }
+  }
 }

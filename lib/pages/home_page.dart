@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder(
       stream: userGroupsStream,
       builder: (context, AsyncSnapshot snapshot) {
-        //       // make some checks
+        
         if (snapshot.hasData) {
           if (snapshot.data['groups'] != null) {
             if (snapshot.data['groups'].length != 0) {
@@ -310,10 +310,10 @@ class _HomePageState extends State<HomePage> {
                             uid: FirebaseAuthService().currentUser!.uid,
                           )
                           .createGroup(
+                            groupName,
+                            FirebaseAuthService().currentUser!.uid,
                             FirebaseAuthService().currentUser!.displayName ??
                                 "",
-                            FirebaseAuthService().currentUser!.uid,
-                            groupName,
                           )
                           .whenComplete(() {
                             _isLoading = false;
