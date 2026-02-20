@@ -28,13 +28,13 @@ class _GroupInfoState extends State<GroupInfo> {
   }
 
   getMembers() async {
-    // DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-    //     .getGroupMembers(widget.groupId)
-    //     .then((val) {
-    //   setState(() {
-    //     members = val;
-    //   });
-    // });
+    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getMembers(widget.groupId)
+        .then((val) {
+      setState(() {
+        members = val;
+      });
+    });
   }
 
   String getName(String r) {
