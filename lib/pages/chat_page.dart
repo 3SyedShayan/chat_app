@@ -71,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
       body: Stack(
         children: <Widget>[
           // chat messages here
-          // chatMessages(),
+          chatMessages(),
           Container(
             alignment: Alignment.bottomCenter,
             width: MediaQuery.of(context).size.width,
@@ -95,7 +95,7 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(width: 12),
                   GestureDetector(
                     onTap: () {
-                      // sendMessage();
+                      sendMessage();
                     },
                     child: Container(
                       height: 50,
@@ -118,38 +118,39 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  // chatMessages() {
-  //   return StreamBuilder(
-  //     stream: chats,
-  //     builder: (context, AsyncSnapshot snapshot) {
-  //       return snapshot.hasData
-  //           ? ListView.builder(
-  //               itemCount: snapshot.data.docs.length,
-  //               itemBuilder: (context, index) {
-  //                 return MessageTile(
-  //                     message: snapshot.data.docs[index]['message'],
-  //                     sender: snapshot.data.docs[index]['sender'],
-  //                     sentByMe: widget.userName ==
-  //                         snapshot.data.docs[index]['sender']);
-  //               },
-  //             )
-  //           : Container();
-  //     },
-  //   );
-  // }
+  chatMessages() {
+    return StreamBuilder(
+      stream: chats,
+      builder: (context, AsyncSnapshot snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                    message: snapshot.data.docs[index]['message'],
+                    sender: snapshot.data.docs[index]['sender'],
+                    sentByMe:
+                        widget.userName == snapshot.data.docs[index]['sender'],
+                  );
+                },
+              )
+            : Container();
+      },
+    );
+  }
 
-  // sendMessage() {
-  //   if (messageController.text.isNotEmpty) {
-  //     Map<String, dynamic> chatMessageMap = {
-  //       "message": messageController.text,
-  //       "sender": widget.userName,
-  //       "time": DateTime.now().millisecondsSinceEpoch,
-  //     };
+  sendMessage() {
+    if (messageController.text.isNotEmpty) {
+      Map<String, dynamic> chatMessageMap = {
+        "message": messageController.text,
+        "sender": widget.userName,
+        "time": DateTime.now().millisecondsSinceEpoch,
+      };
 
-  //     DatabaseService().sendMessage(widget.groupId, chatMessageMap);
-  //     setState(() {
-  //       messageController.clear();
-  //     });
-  //   }
-  // }
+      DatabaseService().sendMessage(widget.groupId, chatMessageMap);
+      setState(() {
+        messageController.clear();
+      });
+    }
+  }
 }
